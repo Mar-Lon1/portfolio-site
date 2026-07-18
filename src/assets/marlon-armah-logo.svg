@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240">
+  <title>Marlon Armah</title>
+
+  <!-- outer ring -->
+  <circle cx="120" cy="120" r="106" fill="none" stroke="#4A6FA5" stroke-width="4"/>
+
+  <!-- MA ligature: M's right stroke doubles as A's left leg -->
+  <path
+    d="M46,165 L46,75 L96,165 L146,75 L146,165
+       M146,75 L194,165
+       M146,125 L173,125"
+    fill="none"
+    stroke="#0B1D3A"
+    stroke-width="14"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>

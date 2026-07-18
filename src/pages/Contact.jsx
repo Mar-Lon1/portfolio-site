@@ -2,12 +2,21 @@ import { useState } from "react";
 import { Mail, MessageSquare, Send, User } from "lucide-react";
 
 const Contact = () => {
-  const [formState, setFormState] = useState({ name: "", email: "", message: "" });
+  const [formState, setFormState] = useState({ name: "", email: "", message: "", captcha: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  
+  const [num1, setNum1] = useState(Math.floor(Math.random() * 10) + 1);
+  const [num2, setNum2] = useState(Math.floor(Math.random() * 10) + 1);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (parseInt(formState.captcha) !== num1 + num2) {
+      alert("Incorrect captcha answer. Please try again.");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -27,7 +36,9 @@ const Contact = () => {
 
       if (response.ok) {
         setIsSuccess(true);
-        setFormState({ name: "", email: "", message: "" });
+        setFormState({ name: "", email: "", message: "", captcha: "" });
+        setNum1(Math.floor(Math.random() * 10) + 1);
+        setNum2(Math.floor(Math.random() * 10) + 1);
         setTimeout(() => setIsSuccess(false), 5000);
       } else {
         // Fallback to native form submit if AJAX is rejected (e.g. unverified origin like new Vercel deployment)
@@ -123,6 +134,21 @@ const Contact = () => {
                   placeholder="Tell me about your project..."
                 />
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <label htmlFor="captcha" className="text-sm font-medium text-neutral-300 ml-1">
+                Security Question: What is {num1} + {num2}?
+              </label>
+              <input
+                type="text"
+                id="captcha"
+                required
+                value={formState.captcha}
+                onChange={(e) => setFormState({ ...formState, captcha: e.target.value })}
+                className="w-full bg-neutral-950 border border-neutral-800 text-neutral-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all placeholder-neutral-600"
+                placeholder="Your answer"
+              />
             </div>
 
             <button

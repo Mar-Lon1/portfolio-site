@@ -2,7 +2,45 @@ import { useState } from "react";
 import { Mail, MessageSquare, Send, User } from "lucide-react";
 
 const Contact = () => {
-  const isSuccess = false;
+  const [formState, setFormState] = useState({ name: "", email: "", message: "" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch("https://formsubmit.co/ajax/marlonarmah@gmail.com", {
+        method: "POST",
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          name: formState.name,
+          email: formState.email,
+          message: formState.message,
+          _subject: `New Portfolio Contact from ${formState.name}`
+        })
+      });
+
+      if (response.ok) {
+        setIsSuccess(true);
+        setFormState({ name: "", email: "", message: "" });
+        setTimeout(() => setIsSuccess(false), 5000);
+      } else {
+        // Fallback to native form submit if AJAX is rejected (e.g. unverified origin like new Vercel deployment)
+        e.target.submit();
+      }
+    } catch (error) {
+      console.error(error);
+      // Fallback on CORS error
+      e.target.submit();
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="flex-1 w-full max-w-3xl mx-auto px-6 py-12 z-10 flex flex-col justify-center">
@@ -25,10 +63,8 @@ const Contact = () => {
             <p className="text-neutral-400">Thank you for reaching out. I'll be in touch soon.</p>
           </div>
         ) : (
-          <form action="https://formsubmit.co/marlonarmah@gmail.com" method="POST" className="space-y-6">
-            <input type="hidden" name="_subject" value="New Portfolio Contact" />
-            <input type="hidden" name="_next" value={window.location.href} />
-            <input type="hidden" name="_captcha" value="false" />
+          <form action="https://formsubmit.co/marlonarmah@gmail.com" method="POST" onSubmit={handleSubmit} className="space-y-6">
+            <input type="hidden" name="_subject" value={`New Portfolio Contact from ${formState.name}`} />
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
@@ -42,6 +78,8 @@ const Contact = () => {
                     id="name"
                     name="name"
                     required
+                    value={formState.name}
+                    onChange={(e) => setFormState({ ...formState, name: e.target.value })}
                     className="w-full bg-neutral-950 border border-neutral-800 text-neutral-200 rounded-xl pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all placeholder-neutral-600"
                     placeholder="John Doe"
                   />
@@ -59,6 +97,8 @@ const Contact = () => {
                     id="email"
                     name="email"
                     required
+                    value={formState.email}
+                    onChange={(e) => setFormState({ ...formState, email: e.target.value })}
                     className="w-full bg-neutral-950 border border-neutral-800 text-neutral-200 rounded-xl pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all placeholder-neutral-600"
                     placeholder="john@example.com"
                   />
@@ -77,6 +117,8 @@ const Contact = () => {
                   name="message"
                   required
                   rows={5}
+                  value={formState.message}
+                  onChange={(e) => setFormState({ ...formState, message: e.target.value })}
                   className="w-full bg-neutral-950 border border-neutral-800 text-neutral-200 rounded-xl pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all resize-none placeholder-neutral-600"
                   placeholder="Tell me about your project..."
                 />
@@ -85,10 +127,20 @@ const Contact = () => {
 
             <button
               type="submit"
-              className="w-full flex items-center justify-center gap-2 bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-3.5 px-4 rounded-xl transition-all duration-300 shadow-[0_0_20px_rgba(99,102,241,0.2)] hover:shadow-[0_0_20px_rgba(99,102,241,0.4)]"
+              disabled={isSubmitting}
+              className="w-full flex items-center justify-center gap-2 bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-3.5 px-4 rounded-xl transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(99,102,241,0.2)] hover:shadow-[0_0_20px_rgba(99,102,241,0.4)]"
             >
-              Send Message
-              <Send className="w-4 h-4 ml-1" />
+              {isSubmitting ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  Sending...
+                </>
+              ) : (
+                <>
+                  Send Message
+                  <Send className="w-4 h-4 ml-1" />
+                </>
+              )}
             </button>
           </form>
         )}

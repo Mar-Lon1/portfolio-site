@@ -1,6 +1,8 @@
 import { NavLink } from "react-router-dom";
 import { Briefcase, Code2, Home, Mail } from "lucide-react";
 
+import logoUrl from "../assets/marlon-armah-logo.svg";
+
 const Navbar = () => {
   const navLinks = [
     { to: "/", label: "Home", icon: <Home className="w-4 h-4" /> },
@@ -12,7 +14,7 @@ const Navbar = () => {
     <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-center pt-6 px-4 pointer-events-none">
       <nav className="bg-neutral-900/70 backdrop-blur-xl border border-neutral-800 rounded-full px-4 py-2 shadow-2xl pointer-events-auto flex items-center gap-1 sm:gap-2">
         <div className="flex items-center justify-center mr-4 pr-4 border-r border-neutral-800 hidden sm:flex">
-          <Briefcase className="w-5 h-5 text-indigo-400" />
+          <img src={logoUrl} alt="Logo" className="w-8 h-8" />
           <span className="ml-2 font-semibold text-neutral-200 tracking-wide text-sm">Portfolio</span>
         </div>
         

@@ -20,3 +20,9 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}

@@ -2,7 +2,7 @@
 
 @layer base {
   html, body {
-    @apply antialiased scroll-smooth;
+    @apply antialiased scroll-smooth bg-neutral-950 text-neutral-200;
   }
 }
 
